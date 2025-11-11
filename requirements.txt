@@ -1,0 +1,7 @@
+tensorflow
+matplotlib
+opencv-python
+jupyterlab
+dvc[gdrive]  
+mlflow       
+python-dotenv 

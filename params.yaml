@@ -1,0 +1,19 @@
+# params.yaml
+# This file holds all our configuration variables (hyperparameters).
+# This lets us change parameters without touching the code.
+
+data:
+  base_path: "data/chest_xray" # Path to our data
+  train_dir: "data/chest_xray/train"
+  test_dir: "data/chest_xray/test"
+  val_split: 0.2 # 20% of training data for validation
+  seed: 1337 # For reproducible splits
+
+model:
+  img_size: 150
+  batch_size: 32
+  epochs: 10
+  base_model: "MobileNetV2" # So we can easily swap models later
+
+output:
+  model_file: "models/pneumonia_detector.keras" # Output path for our model
