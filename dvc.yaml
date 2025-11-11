@@ -1,0 +1,24 @@
+
+stages:
+  train:
+    cmd: python src/train.py
+    deps:
+      - src/train.py
+      - src/data_loader.py
+      - src/model_builder.py
+      - params.yaml
+      - data/  
+    outs:
+      - models/pneumonia_detector.keras 
+
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+      - src/evaluate.py
+      - src/data_loader.py
+      - models/pneumonia_detector.keras 
+      - params.yaml
+      - data/
+    metrics:
+      - metrics.json: 
+          cache: false
