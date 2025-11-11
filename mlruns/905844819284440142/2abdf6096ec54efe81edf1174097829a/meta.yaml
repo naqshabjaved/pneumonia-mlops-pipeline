@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/naqsh/OneDrive/Desktop/pneumonia-prediction-analysis/mlruns/905844819284440142/2abdf6096ec54efe81edf1174097829a/artifacts
+end_time: 1762900005700
+entry_point_name: ''
+experiment_id: '905844819284440142'
+lifecycle_stage: active
+run_id: 2abdf6096ec54efe81edf1174097829a
+run_name: funny-fawn-113
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1762899490994
+status: 3
+tags: []
+user_id: naqsh
