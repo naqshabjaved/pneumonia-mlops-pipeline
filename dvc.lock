@@ -1,0 +1,60 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/
+      hash: md5
+      md5: 893c2a1b4b6a37987aa970d859ab8136.dir
+      size: 1268553834
+      nfiles: 5856
+    - path: params.yaml
+      hash: md5
+      md5: cd9bcf91557ac6f40beb7769d7826d4c
+      size: 382
+    - path: src/data_loader.py
+      hash: md5
+      md5: 4442484b0fe7b40eff6c980c828ae0c0
+      size: 3750
+    - path: src/model_builder.py
+      hash: md5
+      md5: f88f525389343d0b7212ff76d457576e
+      size: 1725
+    - path: src/train.py
+      hash: md5
+      md5: 7b9527b669773ff602f30d9d72f8c63c
+      size: 4310
+    outs:
+    - path: models/pneumonia_detector.keras
+      hash: md5
+      md5: 3b4dd6f971fa41e5ffb513143950d970
+      size: 9633174
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - path: data/
+      hash: md5
+      md5: 893c2a1b4b6a37987aa970d859ab8136.dir
+      size: 1268553834
+      nfiles: 5856
+    - path: models/pneumonia_detector.keras
+      hash: md5
+      md5: 3b4dd6f971fa41e5ffb513143950d970
+      size: 9633174
+    - path: params.yaml
+      hash: md5
+      md5: cd9bcf91557ac6f40beb7769d7826d4c
+      size: 382
+    - path: src/data_loader.py
+      hash: md5
+      md5: 4442484b0fe7b40eff6c980c828ae0c0
+      size: 3750
+    - path: src/evaluate.py
+      hash: md5
+      md5: 56450ed21823c09029a13f5760b5afef
+      size: 3148
+    outs:
+    - path: metrics.json
+      hash: md5
+      md5: b1f9cf3c5447cbebc394aa7696b6dc6f
+      size: 166
