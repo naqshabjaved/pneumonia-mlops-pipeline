@@ -1,0 +1,56 @@
+name: CML-Pipeline
+
+on: 
+  push:
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    env:
+      DAGSHUB_USER_NAME: ${{ secrets.DAGSHUB_USER_NAME }}
+      DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+      MLFLOW_TRACKING_URI: https://dagshub.com/${{ github.repository }}.mlflow
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - uses: iterative/setup-cml@v1 
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+      
+      - name: Authenticate DagsHub Remote
+        run: |
+          # DVC needs these credentials to pull and push data from DagsHub
+          dvc remote modify dagshub user ${{ env.DAGSHUB_USER_NAME }}
+          dvc remote modify dagshub password ${{ env.DAGSHUB_TOKEN }}
+          
+          # Git configuration for the bot to post comments
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+      - name: Pull DVC Data
+        run: dvc pull -r dagshub 
+
+      - name: Reproduce Pipeline
+        run: dvc repro
+
+      - name: Push New Model to Remote
+        run: dvc push -r dagshub
+
+      - name: Create CML Report
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the DVC metrics table in Markdown format
+          dvc metrics show --show-md > report.md
+          
+          # Add a title
+          echo "## 📊 Pipeline Metrics Report" >> report.md
+          
+          # Send the report.md file as a comment to the Git commit
+          cml-send-comment report.md
