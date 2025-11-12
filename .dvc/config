@@ -1,4 +1,8 @@
 [core]
     remote = my-local-remote
-['remote "my-local-remote"']
-    url = ../../dvc-storage
+[remote "my-local-remote"]
+    url = ../dvc-storage
+[remote "dagshub"]
+    url = https://dagshub.com/naqshabjaved/pneumonia-mlops-pipeline.dvc
+    user = naqshabjaved
+    password = 7df91575afca3c1b17db631b2b47824409534c0f
