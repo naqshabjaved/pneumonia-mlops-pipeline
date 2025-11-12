@@ -33,8 +33,13 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
+      - name: Force Initial Data Push
+        run: |
+          echo "WARNING: Pushing data from GitHub Actions workspace to Dagshub..."
+          dvc push -r dagshub
+
       - name: Pull DVC Data
-        run: dvc pull -r dagshub 
+        run: dvc pull -r dagshub
 
       - name: Reproduce Pipeline
         run: dvc repro
