@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/naqsh/OneDrive/Desktop/pneumonia-prediction-analysis/mlruns/905844819284440142/3e471f2d994a48f598558a0bb413acaa/artifacts
+end_time: 1762902265282
+entry_point_name: ''
+experiment_id: '905844819284440142'
+lifecycle_stage: active
+run_id: 3e471f2d994a48f598558a0bb413acaa
+run_name: burly-bear-94
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1762901671845
+status: 3
+tags: []
+user_id: naqsh

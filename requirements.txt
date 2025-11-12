@@ -2,6 +2,8 @@ tensorflow
 matplotlib
 opencv-python
 jupyterlab
-dvc[gdrive]  
+dvc
 mlflow       
 python-dotenv 
+cml
+keras-core

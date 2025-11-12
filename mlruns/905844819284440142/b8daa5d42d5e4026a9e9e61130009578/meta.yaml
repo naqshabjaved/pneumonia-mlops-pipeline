@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/naqsh/OneDrive/Desktop/pneumonia-prediction-analysis/mlruns/905844819284440142/b8daa5d42d5e4026a9e9e61130009578/artifacts
+end_time: 1762900741714
+entry_point_name: ''
+experiment_id: '905844819284440142'
+lifecycle_stage: active
+run_id: b8daa5d42d5e4026a9e9e61130009578
+run_name: luminous-midge-567
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1762900229447
+status: 3
+tags: []
+user_id: naqsh

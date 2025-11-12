@@ -4,7 +4,7 @@ import yaml
 import json
 import sys
 from data_loader import get_data_generators
-import mlflow 
+import mlflow
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
@@ -13,7 +13,7 @@ PARAMS_PATH = os.path.join(PROJECT_ROOT, "params.yaml")
 def evaluate_model():
     """
     Loads the trained model, evaluates it, saves metrics to JSON,
-    and logs metrics to MLFlow.
+    and logs metrics to the *existing* MLFlow run.
     """
     try:
         with open(PARAMS_PATH, 'r') as f:
@@ -50,8 +50,20 @@ def evaluate_model():
 
     mlflow.set_tracking_uri(mlflow_params['tracking_uri'])
     mlflow.set_experiment(mlflow_params['experiment_name'])
- 
-    with mlflow.start_run(run_name="EvaluationRun", nested=True):
+    
+    active_run_id = None
+    try:
+        run_id_path = os.path.join(PROJECT_ROOT, "run_id.json")
+        with open(run_id_path, 'r') as f:
+            active_run_id = json.load(f)['run_id']
+        print(f"Resuming MLFlow run: {active_run_id}")
+    except FileNotFoundError:
+        print("No active run_id found. Starting a new, independent run for evaluation.")
+        
+    with mlflow.start_run(run_id=active_run_id):
+        if active_run_id is None:
+            mlflow.set_tag("run_type", "evaluation_only")
+            
         print("\n--- Evaluating Model on Test Set ---")
         results = model.evaluate(test_ds)
 
@@ -81,7 +93,6 @@ def evaluate_model():
             
             print("Logging metrics to MLFlow...")
             mlflow.log_metrics(metrics)
-            
             mlflow.log_artifact(metrics_path, "metrics")
             print("MLFlow evaluation run finished.")
             

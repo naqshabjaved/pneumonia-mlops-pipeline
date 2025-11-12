@@ -6,6 +6,7 @@ from model_builder import build_model
 import numpy as np
 import sys
 import mlflow
+import json 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
@@ -66,8 +67,11 @@ def train_model():
     mlflow.set_tracking_uri(mlflow_params['tracking_uri'])
     mlflow.set_experiment(mlflow_params['experiment_name'])
 
-    with mlflow.start_run():
+    with mlflow.start_run() as run:
         print("Starting MLFlow run...")
+        
+        run_id = run.info.run_id
+        print(f"MLFlow Run ID: {run_id}")
         
         print("Logging parameters...")
         mlflow.log_params(data_params)
@@ -115,6 +119,11 @@ def train_model():
         print(f"Model saved successfully to {model_path_abs}")
         
         mlflow.log_artifact(model_path_abs, "model")
+        
+        run_id_path = os.path.join(PROJECT_ROOT, "run_id.json")
+        with open(run_id_path, 'w') as f:
+            json.dump({'run_id': run_id}, f)
+        print(f"Saved Run ID to {run_id_path}")
         
         print("MLFlow run finished.")
 

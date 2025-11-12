@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/naqsh/OneDrive/Desktop/pneumonia-prediction-analysis/mlruns/905844819284440142/24ade62a78594293aa17cfd8fe0b322a/artifacts
+end_time: 1762900768706
+entry_point_name: ''
+experiment_id: '905844819284440142'
+lifecycle_stage: active
+run_id: 24ade62a78594293aa17cfd8fe0b322a
+run_name: EvaluationRun
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1762900758437
+status: 3
+tags: []
+user_id: naqsh

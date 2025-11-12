@@ -22,12 +22,12 @@ stages:
       size: 1725
     - path: src/train.py
       hash: md5
-      md5: 7b9527b669773ff602f30d9d72f8c63c
-      size: 4310
+      md5: bd77a48ce241d61b5b7b608fc20dbcab
+      size: 4631
     outs:
     - path: models/pneumonia_detector.keras
       hash: md5
-      md5: 3b4dd6f971fa41e5ffb513143950d970
+      md5: 28f868bdec14f74c2d56a443396f77e6
       size: 9633174
   evaluate:
     cmd: python src/evaluate.py
@@ -39,7 +39,7 @@ stages:
       nfiles: 5856
     - path: models/pneumonia_detector.keras
       hash: md5
-      md5: 3b4dd6f971fa41e5ffb513143950d970
+      md5: 28f868bdec14f74c2d56a443396f77e6
       size: 9633174
     - path: params.yaml
       hash: md5
@@ -51,10 +51,10 @@ stages:
       size: 3750
     - path: src/evaluate.py
       hash: md5
-      md5: 56450ed21823c09029a13f5760b5afef
-      size: 3148
+      md5: ebe2b994b1107a48508cc8c99d2a955b
+      size: 3629
     outs:
     - path: metrics.json
       hash: md5
-      md5: b1f9cf3c5447cbebc394aa7696b6dc6f
+      md5: 7330f8a051e8e6b520cf2a06a735c2e8
       size: 166
