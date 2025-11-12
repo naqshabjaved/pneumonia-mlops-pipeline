@@ -1,10 +1,10 @@
-# 🩺 MLOps Pipeline: Chest X-ray Pneumonia Detection (MobileNetV2)
+# MLOps Pipeline: Chest X-ray Pneumonia Detection (MobileNetV2)
 
 This project establishes a complete, production-grade MLOps pipeline for a Computer Vision model designed to classify chest X-ray images as **NORMAL** or **PNEUMONIA**.
 
 The pipeline encompasses Data Version Control (DVC), Experiment Tracking (MLFlow), Continuous Machine Learning (CML) via GitHub Actions, and deployment using Streamlit.
 
-## 🚀 Key Achievements & Results
+##  Key Achievements & Results
 
 This project successfully transitioned a Jupyter Notebook prototype into a fully version-controlled, modular, and automated system.
 
@@ -18,7 +18,7 @@ This project successfully transitioned a Jupyter Notebook prototype into a fully
 
 The final model utilizes **Transfer Learning** with a pre-trained **MobileNetV2** backbone, which drastically reduced training time and solved severe overfitting issues present in the initial scratch-built Convolutional Neural Network (CNN).
 
-## 🛠️ MLOps Architecture Stack
+##  MLOps Architecture Stack
 
 | Component | Tool | Purpose |
 | :--- | :--- | :--- |
@@ -28,7 +28,7 @@ The final model utilizes **Transfer Learning** with a pre-trained **MobileNetV2*
 | **Continuous ML (CML)** | GitHub Actions + CML | Automates the pipeline. Triggers model re-training and posts a metrics report on every code push. |
 | **Deployment** | Streamlit | Provides a fully functional, interactive web application (`app.py`) for users to upload X-rays and receive real-time predictions. |
 
-## 🛑 Infrastructure & CML Status (Transparency Note)
+## Infrastructure & CML Status (Transparency Note)
 
 The MLOps pipeline structure is **100% complete and verified**. The application code is working.
 
