@@ -34,7 +34,7 @@ if uploaded_file is not None:
     if st.button("Analyze X-ray"):
         st.info("Analyzing image...")
         
-       
+        uploaded_file.seek(0)       
         predicted_class, confidence_percent, raw_prob = predict_pneumonia(uploaded_file)
         
         st.markdown("### 🔬 Prediction Result")
