@@ -10,7 +10,6 @@ from src.training.model import build_model
 
 
 
-# Path Resolution (Repo-root safe, execution-context independent)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -22,6 +21,7 @@ METRICS_DIR = REPO_ROOT / "artifacts" / "metrics"
 
 MODEL_DIR.mkdir(parents=True, exist_ok=True)
 METRICS_DIR.mkdir(parents=True, exist_ok=True)
+
 
 
 # Utility: Class Weights
@@ -68,7 +68,7 @@ def train():
     mlflow_cfg = params.get("mlflow", {})
 
     
-    # MLflow setup (tracking only)
+    # MLflow setup 
     
     if mlflow_cfg:
         mlflow.set_tracking_uri(mlflow_cfg["tracking_uri"])
@@ -80,5 +80,73 @@ def train():
             mlflow.log_params(data_cfg)
 
         
+        # Load data 
+        
         train_ds, val_ds, test_ds, classes = get_data_generators(
-            train_dir=DATA_ROOT
+            train_dir=DATA_ROOT / data_cfg["train_dir"],
+            test_dir=DATA_ROOT / data_cfg["test_dir"],
+            img_size=model_cfg["img_size"],
+            batch_size=model_cfg["batch_size"],
+            val_split=data_cfg["val_split"],
+            seed=data_cfg["seed"],
+        )
+
+        
+        # Build model
+        
+        model = build_model(img_size=model_cfg["img_size"])
+
+        
+        # Handle class imbalance
+        
+        class_weights = calculate_class_weights(train_ds)
+
+        if run:
+            mlflow.log_param("class_weight_normal", class_weights[0])
+            mlflow.log_param("class_weight_pneumonia", class_weights[1])
+
+        
+        # Train
+        
+        history = model.fit(
+            train_ds,
+            validation_data=val_ds,
+            epochs=model_cfg["epochs"],
+            class_weight=class_weights,
+        )
+
+        
+        # Log final metrics
+        
+        final_metrics = {
+            "final_val_accuracy": history.history["val_accuracy"][-1],
+            "final_val_loss": history.history["val_loss"][-1],
+        }
+
+        if run:
+            mlflow.log_metrics(final_metrics)
+
+        
+        # Save model
+        
+        model_path = MODEL_DIR / Path(output_cfg["model_file"]).name
+        model.save(model_path)
+
+        print(f"[INFO] Model saved to: {model_path}")
+
+        
+        # Save run metadata
+        
+        if run:
+            run_id_path = METRICS_DIR / "run_id.json"
+            with open(run_id_path, "w") as f:
+                json.dump({"run_id": run.info.run_id}, f)
+
+
+
+# CLI entry
+
+
+if __name__ == "__main__":
+    from contextlib import nullcontext
+    train()
