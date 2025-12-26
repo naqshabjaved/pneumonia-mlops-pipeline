@@ -1,104 +1,112 @@
-import tensorflow as tf
 import os
-import yaml
 import json
 import sys
-from src.data.loader import get_data_generators
-from src.training.model import build_model
+import yaml
+import tensorflow as tf
 import mlflow
 
+from src.data.loader import get_data_generators
+from src.training.model import build_model
+
+
+# Path resolution (DO NOT CHANGE)
+
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
-PARAMS_PATH = os.path.join(PROJECT_ROOT, "params.yaml")
+PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..", ".."))
+
+PARAMS_PATH = os.path.join(PROJECT_ROOT, "configs", "params.yaml")
+DATA_ROOT = os.path.join(PROJECT_ROOT, "artifacts", "data_processed")
+
+
+
+# Evaluation logic
+
 
 def evaluate_model():
-    """
-    Loads the trained model, evaluates it, saves metrics to JSON,
-    and logs metrics to the *existing* MLFlow run.
-    """
+    """Evaluate trained model on test set and log metrics."""
+
     try:
-        with open(PARAMS_PATH, 'r') as f:
+        with open(PARAMS_PATH, "r") as f:
             params = yaml.safe_load(f)
     except Exception as e:
-        print(f"Error loading {PARAMS_PATH}: {e}")
+        print(f"[ERROR] Failed to load params.yaml: {e}")
         sys.exit(1)
 
-    data_params = params['data']
-    model_params = params['model']
-    output_params = params['output']
-    mlflow_params = params['mlflow']
-    
-    model_path_abs = os.path.join(PROJECT_ROOT, output_params['model_file'])
+    data_cfg = params["data"]
+    model_cfg = params["model"]
+    output_cfg = params["output"]
+    mlflow_cfg = params["mlflow"]
 
-    print("\n--- Loading Test Data ---")
-    _, _, test_ds, classes = get_data_generators(
-        train_dir=data_params['train_dir'],
-        test_dir=data_params['test_dir'],
-        img_size=model_params['img_size'],
-        batch_size=model_params['batch_size'],
-        val_split=data_params['val_split'],
-        seed=data_params['seed']
+    # Resolve paths
+    test_dir = os.path.join(DATA_ROOT, data_cfg["test_dir"])
+    model_path = os.path.join(PROJECT_ROOT, output_cfg["model_file"])
+
+    print(f"[INFO] Loading test data from: {test_dir}")
+
+    _, _, test_ds, class_names = get_data_generators(
+        train_dir=None,                # not used in evaluation
+        test_dir=test_dir,
+        img_size=model_cfg["img_size"],
+        batch_size=model_cfg["batch_size"],
+        val_split=data_cfg["val_split"],
+        seed=data_cfg["seed"],
     )
 
-    print(f"\n--- Loading Model From {model_path_abs} ---")
+    print(f"[INFO] Classes: {class_names}")
+
+    print(f"[INFO] Loading model from: {model_path}")
+
     try:
-        model = tf.keras.models.load_model(model_path_abs)
+        model = tf.keras.models.load_model(model_path)
     except Exception as e:
-        print(f"Error loading model from {model_path_abs}: {e}")
-        print("Please ensure you have run 'python src/train.py' successfully first.")
+        print(f"[ERROR] Failed to load model: {e}")
         sys.exit(1)
-    print("Model loaded successfully.")
 
-    mlflow.set_tracking_uri(mlflow_params['tracking_uri'])
-    mlflow.set_experiment(mlflow_params['experiment_name'])
-    
-    active_run_id = None
-    try:
-        run_id_path = os.path.join(PROJECT_ROOT, "run_id.json")
-        with open(run_id_path, 'r') as f:
-            active_run_id = json.load(f)['run_id']
-        print(f"Resuming MLFlow run: {active_run_id}")
-    except FileNotFoundError:
-        print("No active run_id found. Starting a new, independent run for evaluation.")
-        
-    with mlflow.start_run(run_id=active_run_id):
-        if active_run_id is None:
+    mlflow.set_tracking_uri(mlflow_cfg["tracking_uri"])
+    mlflow.set_experiment(mlflow_cfg["experiment_name"])
+
+    run_id_path = os.path.join(PROJECT_ROOT, "run_id.json")
+    run_id = None
+
+    if os.path.exists(run_id_path):
+        with open(run_id_path, "r") as f:
+            run_id = json.load(f).get("run_id")
+        print(f"[INFO] Resuming MLflow run: {run_id}")
+    else:
+        print("[INFO] No training run_id found. Starting new evaluation run.")
+
+    with mlflow.start_run(run_id=run_id):
+        if run_id is None:
             mlflow.set_tag("run_type", "evaluation_only")
-            
-        print("\n--- Evaluating Model on Test Set ---")
-        results = model.evaluate(test_ds)
 
-        test_loss = results[0]
-        test_accuracy = results[1]
-        test_precision = results[2]
-        test_recall = results[3]
-
-        print(f"Test Loss: {test_loss:.4f}")
-        print(f"Test Accuracy: {test_accuracy:.4f} ({(test_accuracy*100):.2f}%)")
-        print(f"Test Precision: {test_precision:.4f}")
-        print(f"Test Recall: {test_recall:.4f}")
+        print("[INFO] Evaluating model on test set...")
+        results = model.evaluate(test_ds, verbose=1)
 
         metrics = {
-            'test_loss': test_loss,
-            'test_accuracy': test_accuracy,
-            'test_precision': test_precision,
-            'test_recall': test_recall
+            "test_loss": float(results[0]),
+            "test_accuracy": float(results[1]),
+            "test_precision": float(results[2]),
+            "test_recall": float(results[3]),
         }
-        
-        metrics_path = os.path.join(PROJECT_ROOT, 'metrics.json')
-        
-        try:
-            with open(metrics_path, 'w') as f:
-                json.dump(metrics, f, indent=4)
-            print(f"\nMetrics saved successfully to {metrics_path}")
-            
-            print("Logging metrics to MLFlow...")
-            mlflow.log_metrics(metrics)
-            mlflow.log_artifact(metrics_path, "metrics")
-            print("MLFlow evaluation run finished.")
-            
-        except Exception as e:
-            print(f"Error saving/logging metrics: {e}")
+
+        for k, v in metrics.items():
+            print(f"{k}: {v:.4f}")
+
+        metrics_dir = os.path.join(PROJECT_ROOT, "artifacts", "metrics")
+        os.makedirs(metrics_dir, exist_ok=True)
+
+        metrics_path = os.path.join(metrics_dir, "metrics.json")
+        with open(metrics_path, "w") as f:
+            json.dump(metrics, f, indent=4)
+
+        print(f"[INFO] Metrics saved to: {metrics_path}")
+
+        mlflow.log_metrics(metrics)
+        mlflow.log_artifact(metrics_path, artifact_path="metrics")
+
+        print("[INFO] Evaluation completed successfully.")
+
 
 if __name__ == "__main__":
     evaluate_model()
