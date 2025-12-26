@@ -1,11 +1,12 @@
 stages:
   data_prepare:
-    cmd: python src/data/prepare.py
-    deps:
-      - src/data/prepare.py
-      - data/
-    outs:
-      - data/processed/
+  cmd: python src/data/prepare.py
+  deps:
+    - src/data/prepare.py
+    - data/
+  outs:
+    - artifacts/data_processed/
+
 
   train:
     cmd: python src/training/train.py
