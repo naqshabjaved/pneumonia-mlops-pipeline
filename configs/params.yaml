@@ -16,7 +16,7 @@ model:
   base_model: "MobileNetV2"
 
 output:
-  model_file: "models/pneumonia_detector.keras"
+  model_file: "artifacts/models/pneumonia_detector.keras"
 
 
 mlflow:
