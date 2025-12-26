@@ -2,7 +2,7 @@ import os
 import yaml
 import tensorflow as tf
 from src.data.loader import get_data_generators
-from model_builder import build_model
+from src.training.model import build_model
 import numpy as np
 import sys
 import mlflow
