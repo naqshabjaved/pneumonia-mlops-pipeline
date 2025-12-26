@@ -17,34 +17,31 @@ def get_data_generators(train_dir, test_dir, img_size, batch_size, val_split, se
     print(f"Loading test data from: {test_dir_abs}")
     
     train_ds = tf.keras.utils.image_dataset_from_directory(
-        train_dir_abs, 
-        label_mode='binary',
-        image_size=IMG_SIZE_TUPLE,
-        batch_size=batch_size,
-        shuffle=True,
+        train_dir,
         validation_split=val_split,
-        subset='training',
-        seed=seed
+        subset="training",
+        seed=seed,
+        image_size=img_size,
+        batch_size=batch_size
     )
 
     val_ds = tf.keras.utils.image_dataset_from_directory(
-        train_dir_abs,
-        label_mode='binary',
-        image_size=IMG_SIZE_TUPLE,
-        batch_size=batch_size,
-        shuffle=False,
+        train_dir,
         validation_split=val_split,
-        subset='validation',
-        seed=seed
+        subset="validation",
+        seed=   seed,
+        image_size=img_size,
+        batch_size=batch_size
     )
 
+
     test_ds = tf.keras.utils.image_dataset_from_directory(
-        test_dir_abs,
-        label_mode='binary',
-        image_size=IMG_SIZE_TUPLE,
+        test_dir,
+        image_size=img_size,
         batch_size=batch_size,
         shuffle=False
     )
+
     
     class_names = train_ds.class_names
     print(f"Classes found: {class_names}")
