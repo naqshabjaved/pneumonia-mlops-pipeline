@@ -1,0 +1,22 @@
+
+
+data:
+  train_dir: chest_xray/train
+  test_dir: chest_xray/test
+  val_split: 0.2
+  seed: 42
+ 
+
+model:
+  img_size: 150
+  batch_size: 32
+  epochs: 10
+  base_model: "MobileNetV2"
+
+output:
+  model_file: "models/pneumonia_detector.keras"
+
+
+mlflow:
+  experiment_name: "Pneumonia-Detection-V2"
+  tracking_uri: "mlruns" 
