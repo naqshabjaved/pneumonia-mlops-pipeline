@@ -30,12 +30,15 @@ METRICS_DIR.mkdir(parents=True, exist_ok=True)
 def calculate_class_weights(train_ds):
     """
     Compute class weights for imbalanced binary classification.
+    Handles scalar labels produced by image_dataset_from_directory.
     """
     label_counts = {0: 0, 1: 0}
 
     for _, labels in train_ds:
         for label in labels.numpy():
-            label_counts[int(label[0])] += 1
+            # Handle scalar labels safely
+            label_int = int(label)
+            label_counts[label_int] += 1
 
     total = sum(label_counts.values())
     if total == 0:
