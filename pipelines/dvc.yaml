@@ -1,29 +1,31 @@
 stages:
   data_prepare:
-  cmd: python src/data/prepare.py
-  deps:
-    - src/data/prepare.py
-    - data/
-  outs:
-    - artifacts/data_processed/
+    cmd: cmd: set PYTHONPATH=.. && python ../src/data/prepare.py
 
+    deps:
+      - ../src/data/prepare.py
+      - ../data/
+    outs:
+      - ../artifacts/data_processed/
 
   train:
-    cmd: python src/training/train.py
+    cmd: set PYTHONPATH=.. && python ../src/training/train.py
     deps:
-      - src/training/train.py
-      - src/training/model.py
-      - data/processed/
-      - configs/params.yaml
+      - ../src/training/train.py
+      - ../src/training/model.py
+      - ../src/data/loader.py
+      - ../artifacts/data_processed/
+      - ../configs/params.yaml
     outs:
-      - artifacts/models/
+      - ../artifacts/models/
 
   evaluate:
-    cmd: python src/training/evaluate.py
+    cmd: set PYTHONPATH=.. && python ../src/training/evaluate.py
     deps:
-      - src/training/evaluate.py
-      - artifacts/models/
-      - data/processed/
+      - ../src/training/evaluate.py
+      - ../src/data/loader.py
+      - ../artifacts/models/
+      - ../artifacts/data_processed/
     metrics:
-      - artifacts/metrics/metrics.json:
+      - ../artifacts/metrics/metrics.json:
           cache: false
