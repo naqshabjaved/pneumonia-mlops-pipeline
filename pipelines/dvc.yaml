@@ -1,0 +1,28 @@
+stages:
+  data_prepare:
+    cmd: python src/data/prepare.py
+    deps:
+      - src/data/prepare.py
+      - data/
+    outs:
+      - data/processed/
+
+  train:
+    cmd: python src/training/train.py
+    deps:
+      - src/training/train.py
+      - src/training/model.py
+      - data/processed/
+      - configs/params.yaml
+    outs:
+      - artifacts/models/
+
+  evaluate:
+    cmd: python src/training/evaluate.py
+    deps:
+      - src/training/evaluate.py
+      - artifacts/models/
+      - data/processed/
+    metrics:
+      - artifacts/metrics/metrics.json:
+          cache: false

@@ -1,3 +1,71 @@
-data/
-models/
-run_id.json
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+.env
+.venv/
+venv/
+ENV/
+
+# =========================
+# Jupyter / Research
+# =========================
+.ipynb_checkpoints/
+*.ipynb~
+
+# =========================
+# Data
+# =========================
+# Root data directory only
+/data/
+/data/**
+!/data/.gitkeep
+
+
+# =========================
+# DVC
+# =========================
+.dvc/cache/
+.dvc/tmp/
+
+# =========================
+# ML Artifacts (runtime)
+# =========================
+mlruns/
+artifacts/models/*
+artifacts/metrics/*
+!artifacts/models/.gitkeep
+!artifacts/metrics/.gitkeep
+
+# =========================
+# Model files (safety)
+# =========================
+*.h5
+*.keras
+*.pt
+*.pth
+*.onnx
+
+# =========================
+# Logs & outputs
+# =========================
+logs/
+*.log
+
+# =========================
+# OS / Editor noise
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# Temporary / diagnostics
+# =========================
+structure_*.txt
