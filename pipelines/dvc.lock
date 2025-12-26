@@ -1,0 +1,76 @@
+schema: '2.0'
+stages:
+  data_prepare:
+    cmd: cmd /C "cd .. && python -m src.data.prepare"
+    deps:
+    - path: ../data/
+      hash: md5
+      md5: 92357ac26ca66937b159337820e98766.dir
+      size: 1268553834
+      nfiles: 5857
+    - path: ../src/data/prepare.py
+      hash: md5
+      md5: e47a238cc756a4a5a2344e161dd14c30
+      size: 808
+    outs:
+    - path: ../artifacts/data_processed/
+      hash: md5
+      md5: 92357ac26ca66937b159337820e98766.dir
+      size: 1268553834
+      nfiles: 5857
+  train:
+    cmd: cmd /C "cd .. && python -m src.training.train"
+    deps:
+    - path: ../artifacts/data_processed/
+      hash: md5
+      md5: 92357ac26ca66937b159337820e98766.dir
+      size: 1268553834
+      nfiles: 5857
+    - path: ../configs/params.yaml
+      hash: md5
+      md5: 54a67cc18a8e7c588ab50ef751fce6e2
+      size: 349
+    - path: ../src/data/loader.py
+      hash: md5
+      md5: 760286190befdc8a9db2db9cbc980088
+      size: 3589
+    - path: ../src/training/model.py
+      hash: md5
+      md5: f88f525389343d0b7212ff76d457576e
+      size: 1725
+    - path: ../src/training/train.py
+      hash: md5
+      md5: a3b4a286472b9cf4a7176d0d4b7e0229
+      size: 3913
+    outs:
+    - path: ../artifacts/models/
+      hash: md5
+      md5: 4793a78ebda2753ff889a2fba3ad7669.dir
+      size: 9633174
+      nfiles: 1
+  evaluate:
+    cmd: cmd /C "cd .. && python -m src.training.evaluate"
+    deps:
+    - path: ../artifacts/data_processed/
+      hash: md5
+      md5: 92357ac26ca66937b159337820e98766.dir
+      size: 1268553834
+      nfiles: 5857
+    - path: ../artifacts/models/
+      hash: md5
+      md5: 4793a78ebda2753ff889a2fba3ad7669.dir
+      size: 9633174
+      nfiles: 1
+    - path: ../src/data/loader.py
+      hash: md5
+      md5: 760286190befdc8a9db2db9cbc980088
+      size: 3589
+    - path: ../src/training/evaluate.py
+      hash: md5
+      md5: 5b6bc8dd9711f8df6b954e64cd52d2bd
+      size: 3395
+    outs:
+    - path: ../artifacts/metrics/metrics.json
+      hash: md5
+      md5: 4a0f9fc8294c9cff0dcdab9995682ec8
+      size: 167
