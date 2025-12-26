@@ -1,6 +1,6 @@
 stages:
   data_prepare:
-    cmd: cmd /C "set PYTHONPATH=.. && python -m src.data.prepare"
+    cmd: cmd /C "cd .. && python -m src.data.prepare"
     deps:
       - ../src/data/prepare.py
       - ../data/
@@ -8,7 +8,7 @@ stages:
       - ../artifacts/data_processed/
 
   train:
-    cmd: cmd /C "set PYTHONPATH=.. && python -m src.training.train"
+    cmd: cmd /C "cd .. && python -m src.training.train"
     deps:
       - ../src/training/train.py
       - ../src/training/model.py
@@ -19,7 +19,7 @@ stages:
       - ../artifacts/models/
 
   evaluate:
-    cmd: cmd /C "set PYTHONPATH=.. && python -m src.training.evaluate"
+    cmd: cmd /C "cd .. && python -m src.training.evaluate"
     deps:
       - ../src/training/evaluate.py
       - ../src/data/loader.py
