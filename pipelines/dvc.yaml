@@ -1,6 +1,6 @@
 stages:
   data_prepare:
-    cmd: cmd: set PYTHONPATH=.. && python ../src/data/prepare.py
+    cmd: set PYTHONPATH=.. && python ../src/data/prepare.py
 
     deps:
       - ../src/data/prepare.py
