@@ -130,7 +130,6 @@ Download the Chest X-ray Pneumonia dataset and place it in the following structu
 data/
 └── chest_xray/
     ├── train/
-    ├── val/
     └── test/
 ```
 The dataset is intentionally excluded from version control and must be provided externally.
