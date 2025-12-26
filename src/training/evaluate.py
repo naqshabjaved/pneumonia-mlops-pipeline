@@ -41,11 +41,13 @@ def evaluate_model():
     # Resolve paths
     test_dir = os.path.join(DATA_ROOT, data_cfg["test_dir"])
     model_path = os.path.join(PROJECT_ROOT, output_cfg["model_file"])
+    train_dir = os.path.join(DATA_ROOT, data_cfg["train_dir"])
 
+    
     print(f"[INFO] Loading test data from: {test_dir}")
 
     _, _, test_ds, class_names = get_data_generators(
-        train_dir=None,                # not used in evaluation
+        train_dir=train_dir,               
         test_dir=test_dir,
         img_size=model_cfg["img_size"],
         batch_size=model_cfg["batch_size"],
