@@ -7,3 +7,4 @@ mlflow
 python-dotenv 
 cml
 keras-core
+streamlit
