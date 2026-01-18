@@ -3,8 +3,8 @@ matplotlib
 opencv-python
 jupyterlab
 dvc
-mlflow       
-python-dotenv 
-cml
+mlflow
+python-dotenv
 keras-core
 streamlit
+uvicorn==0.23.2

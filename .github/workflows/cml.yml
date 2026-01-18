@@ -25,7 +25,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
+          pip install --upgrade pip
+          pip install --only-binary=:all: -r requirements.txt
           pip install dvc[cml]
 
       - name: Validate DVC pipeline (no execution)
