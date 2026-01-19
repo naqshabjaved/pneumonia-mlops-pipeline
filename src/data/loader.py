@@ -73,11 +73,8 @@ def get_data_generators(train_dir, test_dir, img_size, batch_size, val_split, se
     return train_ds, val_ds, test_ds, class_names
 
 if __name__ == "__main__":
-    # This block is for testing the script directly
     
-    # Load parameters
     try:
-        # We now use the robust PARAMS_PATH
         with open(PARAMS_PATH, 'r') as f:
             params = yaml.safe_load(f)
     except FileNotFoundError:
