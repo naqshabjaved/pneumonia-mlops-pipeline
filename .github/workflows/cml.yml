@@ -22,12 +22,13 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Set up CML
+        uses: iterative/setup-cml@v1
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade "pip<24.1"
           pip install -r requirements.txt
-          pip install cml
 
       - name: Validate DVC pipeline (no execution)
         run: |
@@ -45,4 +46,4 @@ jobs:
           echo "" >> report.md
           echo "ℹ️ Training and data operations are intentionally manual." >> report.md
 
-          cml comment create report.md
+          cml send-comment report.md
