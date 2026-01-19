@@ -2,7 +2,7 @@ tensorflow
 matplotlib
 opencv-python
 jupyterlab
-dvc-core
+dvc==3.51.0
 mlflow
 python-dotenv
 keras-core
