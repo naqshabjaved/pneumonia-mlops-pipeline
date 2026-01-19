@@ -1,4 +1,11 @@
 # Pneumonia Detection – MLOps-Oriented ML Pipeline
+![CI](https://github.com/naqshabjaved/pneumonia-mlops-pipeline/actions/workflows/cml.yml/badge.svg)
+
+## Overview
+
+This repository demonstrates a **production-oriented MLOps workflow** for medical image classification, focusing on **reproducibility, pipeline discipline, and CI validation** rather than raw model experimentation.
+
+The project showcases how to structure, validate, and evolve an ML system using **DVC**, **GitHub Actions (CML)**, and **parameterized pipelines**, following real-world MLOps practices.
 
 ## Problem Statement
 
@@ -19,6 +26,25 @@ This repository implements a **reproducible training and evaluation pipeline** f
 This scoping choice is deliberate and documented to ensure architectural clarity and reproducibility.
 
 ---
+## CI & Automation
+
+This repository uses **GitHub Actions with CML** to enforce pipeline correctness.
+
+### CI Responsibilities
+- Validate the DVC pipeline DAG (`dvc dag`)
+- Ensure pipeline structure consistency
+- Prevent broken pipelines from being merged
+
+### CI Design Choice
+CI intentionally **does not execute training or pull datasets**.  
+This keeps automation:
+- Fast
+- Deterministic
+- Free from large data dependencies
+
+All changes to the `main` branch are gated by CI checks.
+
+---
 
 ## Architecture Overview
 
@@ -28,6 +54,19 @@ Versioned Data → Training → Evaluation → Tracked Artifacts
 ```
 
 The pipeline is defined as a **Directed Acyclic Graph (DAG)** using `dvc.yaml`, enabling deterministic re-runs and experiment comparison.
+
+---
+## Reproducibility Guarantees
+
+This project guarantees reproducibility through:
+
+- Versioned datasets and artifacts (DVC)
+- Parameterized experiments (`params.yaml`)
+- Deterministic pipeline stages (`dvc.yaml`)
+- Pinned dependencies (`requirements.txt`)
+- CI-based pipeline validation
+
+Any experiment can be reproduced given the same data version and parameters.
 
 ---
 
@@ -88,6 +127,15 @@ The following are **not yet implemented** and are explicitly deferred:
 - CI/CD-driven retraining and release gates  
 
 This separation ensures the current system remains **focused, testable, and reproducible**.
+
+---
+## Explicit Tradeoffs
+
+- Focus is on pipeline correctness, not state-of-the-art accuracy
+- CI validates structure, not model performance
+- Cloud deployment is deferred to keep scope controlled
+
+These tradeoffs are intentional and documented.
 
 ---
 
@@ -158,6 +206,19 @@ After execution, the following artifacts will be available locally:
 - Evaluation metrics: metrics.json
 
 These artifacts are reproducible and traceable through the DVC pipeline.
+
+---
+## Repository Governance
+
+- `main` branch is protected
+- All changes require pull requests
+- CI validation is mandatory before merge
+- Force pushes are disabled
+
+This mirrors production engineering workflows used in real ML teams.
+
+---
+
 
 ## Author
 
