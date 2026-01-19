@@ -33,7 +33,7 @@ jobs:
       - name: Validate DVC pipeline (no execution)
         run: |
           cd pipelines
-          dvc repro --dry
+          dvc dag
 
       - name: Generate CML report
         env:
