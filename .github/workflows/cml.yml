@@ -32,18 +32,19 @@ jobs:
 
       - name: Validate DVC pipeline (no execution)
         run: |
+          cd pipelines
           dvc repro --dry
 
       - name: Generate CML report
         env:
           CML_TOKEN: ${{ secrets.CML_TOKEN }}
         run: |
-          echo "## ✅ Pipeline Validation Report" > report.md
+          echo "## Pipeline Validation Report" > report.md
           echo "" >> report.md
           echo "- DVC DAG validated successfully" >> report.md
           echo "- No missing dependencies detected" >> report.md
           echo "- Pipeline is reproducible and deterministic" >> report.md
           echo "" >> report.md
-          echo "ℹ️ Training and data operations are intentionally manual." >> report.md
+          echo "Training and data operations are intentionally manual." >> report.md
 
           cml send-comment report.md
